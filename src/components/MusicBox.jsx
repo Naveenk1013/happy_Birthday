@@ -42,7 +42,7 @@ export default function MusicBox({ onOpen }) {
         transition={{ duration: 1.2, ease: 'easeInOut' }}
       >
         {/* Interactive Ballpit Background */}
-        <div className="absolute inset-0 z-0 opacity-40">
+        <div className="absolute inset-0 z-0 opacity-40 pointer-events-none">
           <Ballpit
             count={40}
             gravity={0.03}
@@ -56,7 +56,7 @@ export default function MusicBox({ onOpen }) {
         </div>
 
         {/* Decorative elements */}
-        <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {DECORATIVE_ELEMENTS.map((elem) => (
             <motion.div
               key={elem.id}
@@ -80,7 +80,7 @@ export default function MusicBox({ onOpen }) {
         </div>
 
         <motion.div
-          className="text-center z-10"
+          className="text-center relative z-20"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
