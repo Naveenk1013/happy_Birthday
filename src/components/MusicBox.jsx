@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 import { Music, Disc3 } from 'lucide-react';
@@ -15,16 +15,18 @@ const DECORATIVE_ELEMENTS = Array.from({ length: 6 }, (_, i) => ({
 }));
 
 export default function MusicBox({ onOpen }) {
-  const [isWinding, setIsWinding] = useState(false);
+  const [countdown, setCountdown] = useState(5);
 
-  const handleClick = () => {
-    setIsWinding(true);
-
-    // Delay before opening - App.jsx will handle the music
-    setTimeout(() => {
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => {
+        setCountdown(prev => prev - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else {
       onOpen();
-    }, 1500);
-  };
+    }
+  }, [countdown, onOpen]);
 
   return (
     <AnimatePresence>
@@ -108,50 +110,34 @@ export default function MusicBox({ onOpen }) {
             className="text-xl md:text-2xl mb-12 text-[#8a866a]"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
-            for someone wonderful
+            the celebration begins in...
           </motion.p>
 
-          {/* Music Box Button */}
-          <motion.button
-            onClick={handleClick}
-            disabled={isWinding}
-            className="music-box-btn relative px-10 py-6 rounded-full text-white font-medium text-xl"
-            style={{ fontFamily: "'Playfair Display', serif" }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            animate={isWinding ? {
-              rotate: [0, -5, 5, -5, 5, 0],
-              scale: [1, 1.1, 1]
-            } : {}}
-            transition={{ duration: 0.8 }}
-          >
-            <motion.span
-              className="flex items-center gap-3"
-              animate={isWinding ? { opacity: [1, 0.6, 1] } : {}}
-              transition={{ duration: 1, repeat: Infinity }}
-            >
-              {isWinding ? (
-                <>
-                  <Disc3 className="w-6 h-6 animate-spin" />
-                  Opening...
-                </>
-              ) : (
-                <>
-                  <Music className="w-6 h-6" />
-                  Wind the Music Box
-                </>
-              )}
-            </motion.span>
-          </motion.button>
+          {/* Countdown Display */}
+          <div className="flex items-center justify-center h-48">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={countdown}
+                initial={{ scale: 0, opacity: 0, rotate: -20 }}
+                animate={{ scale: 1.5, opacity: 1, rotate: 0 }}
+                exit={{ scale: 3, opacity: 0, rotate: 20 }}
+                transition={{ duration: 0.8, type: 'spring' }}
+                className="text-8xl md:text-9xl font-bold text-[#c88a8a]"
+                style={{ fontFamily: "'Playfair Display', serif" }}
+              >
+                {countdown}
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
-          {/* Subtitle */}
+          {/* Succinct indicator */}
           <motion.p
             className="mt-8 text-[#B2AC88] text-lg italic"
             style={{ fontFamily: "'Playfair Display', serif" }}
             animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 3, repeat: Infinity }}
+            transition={{ duration: 2, repeat: Infinity }}
           >
-            Click to begin the celebration ✨
+            Get ready, Nandini! ✨
           </motion.p>
         </motion.div>
       </motion.div>
